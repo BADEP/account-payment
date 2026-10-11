@@ -68,14 +68,13 @@ class AccountPaymentTermLine(models.Model):
             ("months_after_end_of_month", "Months after end of month"),
         ]
 
-        if payment_terms_delay_type:
-            if payment_terms_delay_type:
-                if payment_terms_delay_type == "months":
-                    delay_type += months_delay_type
-                elif payment_terms_delay_type == "weeks":
-                    delay_type += weeks_delay_type
-                elif payment_terms_delay_type == "weeks_and_months":
-                    delay_type += weeks_delay_type + months_delay_type
+        if payment_terms_delay_type and payment_terms_delay_type:
+            if payment_terms_delay_type == "months":
+                delay_type += months_delay_type
+            elif payment_terms_delay_type == "weeks":
+                delay_type += weeks_delay_type
+            elif payment_terms_delay_type == "weeks_and_months":
+                delay_type += weeks_delay_type + months_delay_type
         return delay_type
 
     def _decode_payment_days(self, days_char):
@@ -94,7 +93,7 @@ class AccountPaymentTermLine(models.Model):
             try:
                 payment_days = record._decode_payment_days(record.payment_days)
                 error = any(day <= 0 or day > 31 for day in payment_days)
-            except Exception:
+            except ValueError:
                 error = True
             if error:
                 raise exceptions.UserError(
@@ -106,17 +105,17 @@ class AccountPaymentTermLine(models.Model):
         due_date = fields.Date.from_string(date_ref) or fields.Date.today()
         if self.delay_type == "weeks_after":
             return due_date + relativedelta(weeks=self.nb_days)
-        elif self.delay_type == "weeks_after_end_of_month":
+        if self.delay_type == "weeks_after_end_of_month":
             return date_utils.end_of(due_date, "month") + relativedelta(
                 weeks=self.nb_days
             )
-        elif self.delay_type == "weeks_after_end_of_next_month":
+        if self.delay_type == "weeks_after_end_of_next_month":
             return date_utils.end_of(
                 due_date + relativedelta(months=1), "month"
             ) + relativedelta(weeks=self.nb_days)
-        elif self.delay_type == "months_after":
+        if self.delay_type == "months_after":
             return due_date + relativedelta(months=self.nb_days)
-        elif self.delay_type == "months_after_end_of_month":
+        if self.delay_type == "months_after_end_of_month":
             return date_utils.end_of(
                 due_date + relativedelta(months=self.nb_days), "month"
             )
@@ -149,11 +148,11 @@ class AccountPaymentTermLine(models.Model):
         self.ensure_one()
         if self.value == "fixed":
             return float_round(self.value_amount, precision_digits=precision_digits)
-        elif self.value in ("percent", "percent_amount_untaxed"):
+        if self.value in ("percent", "percent_amount_untaxed"):
             amt = total_amount * self.value_amount / 100.0
             if self.amount_round:
                 amt = float_round(amt, precision_rounding=self.amount_round)
             return float_round(amt, precision_digits=precision_digits)
-        elif self.value == "balance":
+        if self.value == "balance":
             return float_round(remaining_amount, precision_digits=precision_digits)
         return None

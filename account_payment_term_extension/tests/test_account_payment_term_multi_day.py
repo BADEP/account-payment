@@ -6,6 +6,8 @@ from odoo.addons.base.tests.common import BaseCommon
 
 
 class TestAccountPaymentTermMultiDay(BaseCommon):
+    _test_user_groups = None
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -144,8 +146,7 @@ class TestAccountPaymentTermMultiDay(BaseCommon):
             line_form.quantity = quantity
             line_form.price_unit = price_unit
             line_form.tax_ids.clear()
-        invoice = invoice_form.save()
-        return invoice
+        return invoice_form.save()
 
     def test_amount_untaxed_payment_term_error(self):
         vals = {
@@ -165,9 +166,11 @@ class TestAccountPaymentTermMultiDay(BaseCommon):
 
     def test_invoice_amount_untaxed_payment_term(self):
         invoice = self._create_invoice(self.amount_untaxed_lines, "2020-01-01", 10, 100)
-        with Form(invoice) as invoice_form:
-            with invoice_form.invoice_line_ids.edit(0) as line_form:
-                line_form.tax_ids.add(self.tax)
+        with (
+            Form(invoice) as invoice_form,
+            invoice_form.invoice_line_ids.edit(0) as line_form,
+        ):
+            line_form.tax_ids.add(self.tax)
         invoice.action_post()
         self.assertEqual(invoice.line_ids[1].credit, 100.0)
         self.assertEqual(invoice.line_ids[2].credit, 400.0)
@@ -177,9 +180,11 @@ class TestAccountPaymentTermMultiDay(BaseCommon):
         invoice = self._create_invoice(
             self.amount_untaxed_lines, "2020-01-01", 10, 100, move_type="out_invoice"
         )
-        with Form(invoice) as invoice_form:
-            with invoice_form.invoice_line_ids.edit(0) as line_form:
-                line_form.tax_ids.add(self.tax)
+        with (
+            Form(invoice) as invoice_form,
+            invoice_form.invoice_line_ids.edit(0) as line_form,
+        ):
+            line_form.tax_ids.add(self.tax)
         invoice.action_post()
         self.assertEqual(invoice.line_ids[1].debit, 100.0)
         self.assertEqual(invoice.line_ids[2].debit, 400.0)
