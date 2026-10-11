@@ -140,7 +140,7 @@ class PaymentReturn(models.Model):
 
     def button_match(self):
         self.mapped("line_ids").filtered(
-            lambda x: ((not x.move_line_ids) and x.reference)
+            lambda x: (not x.move_line_ids) and x.reference
         )._find_match()
         self._check_duplicate_move_line()
 
@@ -392,16 +392,16 @@ class PaymentReturnLine(models.Model):
 
     def _find_match(self):
         # we filter again to remove all ready matched lines in inheritance
-        lines2match = self.filtered(lambda x: ((not x.move_line_ids) and x.reference))
+        lines2match = self.filtered(lambda x: (not x.move_line_ids) and x.reference)
         lines2match.match_invoice()
 
         lines2match = lines2match.filtered(
-            lambda x: ((not x.move_line_ids) and x.reference)
+            lambda x: (not x.move_line_ids) and x.reference
         )
         lines2match.match_move_lines()
 
         lines2match = lines2match.filtered(
-            lambda x: ((not x.move_line_ids) and x.reference)
+            lambda x: (not x.move_line_ids) and x.reference
         )
         lines2match.match_move()
         self._get_partner_from_move()
