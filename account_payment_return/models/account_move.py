@@ -117,6 +117,7 @@ class AccountMove(models.Model):
             return super(
                 AccountMove, moves_to_compute
             )._compute_payments_widget_reconciled_info()
+        return None
 
 
 class AccountMoveLine(models.Model):

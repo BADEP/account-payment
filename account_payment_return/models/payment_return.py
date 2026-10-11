@@ -12,13 +12,12 @@ from odoo.exceptions import UserError, ValidationError
 
 class PaymentReturn(models.Model):
     _name = "payment.return"
-    _inherit = ["mail.thread"]
+    _inherit = "mail.thread"
     _description = "Payment return"
     _order = "date DESC, id DESC"
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        string="Company",
         required=True,
         default=lambda self: self.env.company,
     )

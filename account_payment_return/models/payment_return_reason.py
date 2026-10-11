@@ -8,7 +8,7 @@ from odoo.fields import Domain
 class PaymentReturnReason(models.Model):
     _name = "payment.return.reason"
     _description = "Payment return reason"
-    _rec_names_search = ["name", "code"]
+    _rec_names_search = ("name", "code")
 
     code = fields.Char()
     name = fields.Char(string="Reason", translate=True)
