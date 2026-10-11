@@ -1,9 +1,9 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="account_payment_return_import_view" model="ir.ui.view">
         <field name="name">Import Payment Returns</field>
         <field name="model">payment.return.import</field>
-        <field name="priority">1</field>
+        <field name="priority" eval="1" />
         <field name="arch" type="xml">
             <form>
                 <div name="info_alert" class="alert alert-info" role="alert">
