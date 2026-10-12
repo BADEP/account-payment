@@ -162,7 +162,7 @@ class TestAccountCheckPrintingReportBase(BaseCommon):
 
         # Set check layout verification by journal
         ICPSudo = self.env["ir.config_parameter"].sudo()
-        ICPSudo.set_param(
+        ICPSudo.set_str(
             "account_check_printing_report_base.check_layout_verification", "by_journal"
         )
         self.assertFalse(self.payment.journal_id.bank_check_printing_layout)
