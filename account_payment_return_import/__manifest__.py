@@ -7,7 +7,7 @@
 {
     "name": "Account Payment Return Import",
     "category": "Accounting",
-    "version": "19.0.1.0.0",
+    "version": "20.0.1.0.0",
     "development_status": "Mature",
     "summary": "This module adds a generic wizard to import payment return"
     "file formats. Is only the base to be extended by another"
@@ -17,9 +17,9 @@
     "website": "https://github.com/OCA/account-payment",
     "depends": ["account_payment_return"],
     "data": [
-        "security/ir.model.access.csv",
         "views/payment_return_view.xml",
         "wizard/payment_return_import_view.xml",
+        'security/ir.access.csv',
     ],
     "installable": True,
 }
